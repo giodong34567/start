@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
->
 <body>
 
 <div layout:fragment="content">
@@ -14,6 +13,7 @@
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Age</th>
+            <th scope="col">Class</th> <!-- New column for Class -->
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -23,6 +23,7 @@
             <td th:text="${student.name}">John Doe</td>
             <td th:text="${student.email}">john.doe@example.com</td>
             <td th:text="${student.age}">20</td>
+            <td th:text="${student.studentClass != null ? student.studentClass.name : 'No Class Assigned'}">Class Name</td> <!-- Display Class name -->
             <td>
                 <a class="btn btn-warning btn-sm" th:href="@{/students/edit/{id}(id=${student.id})}">Edit</a>
                 <a class="btn btn-danger btn-sm" th:href="@{/students/delete/{id}(id=${student.id})}"
@@ -33,3 +34,4 @@
     </table>
 </div>
 </body>
+</html>

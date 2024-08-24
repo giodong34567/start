@@ -1,4 +1,4 @@
-package springmvc.starter.demo.servicre;
+package springmvc.starter.demo.service;
 
 import java.util.List;
 import java.util.Optional;

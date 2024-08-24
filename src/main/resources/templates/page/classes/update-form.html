@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<div layout:fragment="content">
+    <h1>Update Class</h1>
+    <form th:action="@{/classes/update/{id}(id=${classId})}" th:object="${classVO}" method="post">
+        <div class="form-group">
+            <label for="name">Class Name:</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Enter class name"/>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" th:field="*{description}" class="form-control" placeholder="Enter class description"></textarea>
+            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+
+    <a th:href="@{/classes}" class="btn btn-secondary mt-3">Back to Classes List</a>
+</div>
+
+</body>
+</html>
