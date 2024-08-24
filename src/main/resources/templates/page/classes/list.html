@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<div layout:fragment="content">
+    <h2 class="mb-4" th:text="${title}">Classes</h2>
+    <a class="btn btn-primary mb-3" href="/classes/new">Add New Class</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="class : ${classes}">
+            <td th:text="${class.id}">1</td>
+            <td th:text="${class.name}">Math 101</td>
+            <td th:text="${class.description}">Basic Mathematics</td>
+            <td>
+                <a class="btn btn-warning btn-sm" th:href="@{/classes/edit/{id}(id=${class.id})}">Edit</a>
+                <a class="btn btn-danger btn-sm" th:href="@{/classes/delete/{id}(id=${class.id})}"
+                   onclick="return confirm('Are you sure you want to delete this class?');">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

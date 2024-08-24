@@ -11,7 +11,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("title", "Home");
-        return "page/home"; // Chỉ cần trả về tên template mà không cần extension
+        return "page/home"; 
     }
 
     @GetMapping("/login")

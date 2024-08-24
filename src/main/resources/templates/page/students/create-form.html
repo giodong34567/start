@@ -25,6 +25,14 @@
             <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></div>
         </div>
 
+        <div class="form-group">
+            <label for="classId">Class:</label>
+            <select id="classId" th:field="*{classId}" class="form-control">
+                <option th:each="class : ${classes}" th:value="${class.id}" th:text="${class.name}"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('classId')}" th:errors="*{classId}" class="text-danger"></div>
+        </div>
+
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 

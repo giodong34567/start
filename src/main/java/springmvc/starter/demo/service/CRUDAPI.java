@@ -1,4 +1,4 @@
-import springmvc.starter.demo.servicre.CRUD;
+import springmvc.starter.demo.service.CRUD;
 
 import java.util.List;
 
