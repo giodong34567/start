@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+>
+<body>
+
+<div layout:fragment="content">
+    <h1>Create Student</h1>
+    <form th:action="@{/students}" th:object="${studentVO}" method="post">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Enter student name"/>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Enter student email"/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" th:field="*{age}" class="form-control" placeholder="Enter student age"/>
+            <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+    <a th:href="@{/students}" class="btn btn-secondary mt-3">Back to Students List</a>
+</div>
+</body>

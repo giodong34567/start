@@ -10,8 +10,8 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("message", "Chào mừng bạn đến với Spring MVC v2 Starter!");
-        return "home";
+        model.addAttribute("title", "Home");
+        return "page/home"; // Chỉ cần trả về tên template mà không cần extension
     }
 
     @GetMapping("/login")
