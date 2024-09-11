@@ -71,21 +71,29 @@ public class StudentService {
      * @param studentDTO The StudentDTO containing the data to save.
      */
     public void save(StudentDTO studentDTO) {
-        ClassDTO studentClass = classService.findById(studentDTO.getId()).orElse(null); // Retrieves Class from ClassService
+        // Use studentDTO.getStudentClass().getId() to retrieve the class ID
+        ClassDTO studentClass = classService.findById(studentDTO.getStudentClass().getId()).orElse(null);
         Class classEntity = new Class();
+
         if (studentClass != null) {
             BeanUtils.copyProperties(studentClass, classEntity);
         } else {
             throw new NotFoundException("Class not found");
         }
+
         Student student = new Student(
-                null,
+                studentDTO.getId(), // This is the student's ID, which may be null for new students
                 studentDTO.getName(),
                 studentDTO.getEmail(),
                 studentDTO.getAge(),
                 classEntity
         );
-        studentRepository.save(student);
+
+        try {
+            studentRepository.save(student);
+        } catch (Exception e) {
+            throw new NotFoundException(e.getMessage());
+        }
     }
 
     /**
