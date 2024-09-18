@@ -114,7 +114,7 @@ public class StudentController {
             return "page/students/update-form";  // Return to the update form view
         }
         StudentDTO studentDTO = new StudentDTO(id, studentVO.getName(), studentVO.getEmail(), studentVO.getAge(), new ClassDTO(studentVO.getClassId(), null, null));
-        studentService.update(studentDTO, id);
+        studentService.update(studentDTO);
         return "redirect:/students";
     }
 

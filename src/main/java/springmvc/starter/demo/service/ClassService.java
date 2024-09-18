@@ -22,6 +22,7 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
 
     /**
      * Converts a Class entity to a ClassDTO.
+     *
      * @param classEntity The Class entity to convert.
      * @return The corresponding ClassDTO.
      */
@@ -31,6 +32,7 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
 
     /**
      * Retrieves all classes from the repository and maps them to DTOs.
+     *
      * @return A list of ClassDTO objects.
      */
     public List<ClassDTO> findAll() {
@@ -41,6 +43,7 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
 
     /**
      * Finds a class by its ID and maps it to a DTO.
+     *
      * @param id The ID of the class to find.
      * @return An Optional containing the found ClassDTO or empty if not found.
      */
@@ -51,37 +54,40 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
 
     /**
      * Saves a new class entity to the repository.
+     *
      * @param classDTO The ClassDTO containing the data to save.
      */
     public Class save(ClassDTO classDTO) {
-        if(checkExitsByName(classDTO.getName())) {
+        if (checkExitsByName(classDTO.getName())) {
             throw new ConflictException("Class name already exists");
         }
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
-        classRepository.save(classEntity);
 
-        return classEntity;
+
+        return classRepository.save(classEntity);
     }
 
     /**
      * Updates an existing class entity in the repository.
+     *
      * @param classDTO The ClassDTO containing the updated data.
      */
     public Class update(ClassDTO classDTO) {
         Class classFindByID = classRepository.findById(classDTO.getId()).orElseThrow();
 
-        if(!classFindByID.getName().equals(classDTO.getName()) && checkExitsByName(classDTO.getName())) {
+        if (!classFindByID.getName().equals(classDTO.getName()) && checkExitsByName(classDTO.getName())) {
             throw new ConflictException("Class name already exists");
         }
 
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
-        classRepository.save(classEntity);
 
-        return classEntity;
+
+        return classRepository.save(classEntity);
     }
 
     /**
      * Deletes a class entity from the repository by its ID.
+     *
      * @param id The ID of the class to delete.
      */
     public void deleteById(Long id) {
@@ -89,7 +95,8 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
     }
 
     /**
-     *  Check if a class with the given name already exists in the repository.
+     * Check if a class with the given name already exists in the repository.
+     *
      * @param name The name to check.
      */
     boolean checkExitsByName(String name) {
