@@ -84,6 +84,10 @@ public class ClassService {
         classRepository.deleteById(id);
     }
 
+    /**
+     *  Check if a class with the given name already exists in the repository.
+     * @param name The name to check.
+     */
     boolean checkExitsByName(String name) {
         return this.classRepository.existsByName(name);
     }
