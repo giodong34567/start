@@ -3,6 +3,7 @@ package springmvc.starter.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springmvc.starter.demo.dto.ClassDTO;
+import springmvc.starter.demo.exception.ConflictException;
 import springmvc.starter.demo.model.Class;
 import springmvc.starter.demo.repository.ClassRepository;
 
@@ -53,6 +54,9 @@ public class ClassService {
      * @param classDTO The ClassDTO containing the data to save.
      */
     public void save(ClassDTO classDTO) {
+        if(checkExitsByName(classDTO.getName())) {
+            throw new ConflictException("Class name already exists");
+        }
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
         classRepository.save(classEntity);
     }
@@ -62,6 +66,12 @@ public class ClassService {
      * @param classDTO The ClassDTO containing the updated data.
      */
     public void update(ClassDTO classDTO) {
+        Class classFindByID = classRepository.findById(classDTO.getId()).orElseThrow();
+
+        if(!classFindByID.getName().equals(classDTO.getName()) && checkExitsByName(classDTO.getName())) {
+            throw new ConflictException("Class name already exists");
+        }
+
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
         classRepository.save(classEntity);
     }
@@ -72,5 +82,9 @@ public class ClassService {
      */
     public void deleteById(Long id) {
         classRepository.deleteById(id);
+    }
+
+    boolean checkExitsByName(String name) {
+        return this.classRepository.existsByName(name);
     }
 }
