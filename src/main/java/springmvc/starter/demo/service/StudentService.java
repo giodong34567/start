@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * Service layer for handling business logic related to Student entities.
  */
 @Service
-public class StudentService {
+public class StudentService implements CRUD<Student, Long, StudentDTO> {
 
     @Autowired
     private StudentRepository studentRepository;
@@ -29,6 +29,7 @@ public class StudentService {
 
     /**
      * Retrieves all students from the repository and maps them to DTOs.
+     *
      * @return A list of StudentDTO objects.
      */
     public List<StudentDTO> findAll() {
@@ -39,6 +40,7 @@ public class StudentService {
 
     /**
      * Converts a Student entity to a StudentDTO.
+     *
      * @param student The Student entity to convert.
      * @return The converted StudentDTO.
      */
@@ -58,6 +60,7 @@ public class StudentService {
 
     /**
      * Finds a student by their ID and maps it to a DTO.
+     *
      * @param id The ID of the student to find.
      * @return An Optional containing the found StudentDTO or empty if not found.
      */
@@ -68,9 +71,10 @@ public class StudentService {
 
     /**
      * Saves a new student entity to the repository.
+     *
      * @param studentDTO The StudentDTO containing the data to save.
      */
-    public void save(StudentDTO studentDTO) {
+    public Student save(StudentDTO studentDTO) {
         // Use studentDTO.getStudentClass().getId() to retrieve the class ID
         ClassDTO studentClass = classService.findById(studentDTO.getStudentClass().getId()).orElse(null);
         Class classEntity = new Class();
@@ -90,7 +94,7 @@ public class StudentService {
         );
 
         try {
-            studentRepository.save(student);
+            return studentRepository.save(student);
         } catch (Exception e) {
             throw new NotFoundException(e.getMessage());
         }
@@ -98,11 +102,11 @@ public class StudentService {
 
     /**
      * Updates an existing student entity in the repository.
+     *
      * @param studentDTO The StudentDTO containing the updated data.
-     * @param id The ID of the student to update.
      */
-    public void update(StudentDTO studentDTO, Long id) {
-        Student student = studentRepository.findById(id).orElse(null);
+    public Student update(StudentDTO studentDTO) {
+        Student student = studentRepository.findById(studentDTO.getId()).orElse(null);
         Class classEntity = new Class();
         if (student != null) {
             if (!Objects.equals(student.getStudentClass().getId(), studentDTO.getStudentClass().getId())) {
@@ -119,14 +123,15 @@ public class StudentService {
             student.setEmail(studentDTO.getEmail());
             student.setAge(studentDTO.getAge());
             student.setStudentClass(classEntity);
-            studentRepository.save(student);
+            return studentRepository.save(student);
         } else {
-           throw new NotFoundException("Student not found");
+            throw new NotFoundException("Student not found");
         }
     }
 
     /**
      * Deletes a student entity from the repository by its ID.
+     *
      * @param id The ID of the student to delete.
      */
     public void deleteById(Long id) {
