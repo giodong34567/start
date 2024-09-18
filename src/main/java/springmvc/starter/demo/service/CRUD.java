@@ -3,15 +3,15 @@ package springmvc.starter.demo.service;
 import java.util.List;
 import java.util.Optional;
 
-public interface CRUD<T, ID> {
+public interface CRUD<T, ID, DTO> {
 
-    List<T> findAll();
+    List<DTO> findAll();
 
-    Optional<T> findById(ID id);
+    Optional<DTO> findById(ID id);
 
-    T save(T entity);
+    T save(DTO createDto);
 
-    T update(T entity);
+    T update(DTO updateDto);
 
     void deleteById(ID id);
 }

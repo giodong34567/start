@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * Service layer for handling business logic related to Student entities.
  */
 @Service
-public class StudentService {
+public class StudentService implements CRUD<Student, Long, StudentDTO> {
 
     @Autowired
     private StudentRepository studentRepository;

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Service layer for handling business logic related to Class entities.
  */
 @Service
-public class ClassService {
+public class ClassService implements CRUD<Class, Long, ClassDTO> {
 
     @Autowired
     private ClassRepository classRepository;
@@ -53,19 +53,21 @@ public class ClassService {
      * Saves a new class entity to the repository.
      * @param classDTO The ClassDTO containing the data to save.
      */
-    public void save(ClassDTO classDTO) {
+    public Class save(ClassDTO classDTO) {
         if(checkExitsByName(classDTO.getName())) {
             throw new ConflictException("Class name already exists");
         }
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
         classRepository.save(classEntity);
+
+        return classEntity;
     }
 
     /**
      * Updates an existing class entity in the repository.
      * @param classDTO The ClassDTO containing the updated data.
      */
-    public void update(ClassDTO classDTO) {
+    public Class update(ClassDTO classDTO) {
         Class classFindByID = classRepository.findById(classDTO.getId()).orElseThrow();
 
         if(!classFindByID.getName().equals(classDTO.getName()) && checkExitsByName(classDTO.getName())) {
@@ -74,6 +76,8 @@ public class ClassService {
 
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
         classRepository.save(classEntity);
+
+        return classEntity;
     }
 
     /**
