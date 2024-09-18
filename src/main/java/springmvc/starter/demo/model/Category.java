@@ -6,23 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
-@Entity(name = "categories")
+@AllArgsConstructor()
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@Entity(name = "categories")
 public class Category {
-    @Id()
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
-    @Column(nullable = false, name = "description", columnDefinition = "")
+    @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "category", targetEntity = Product.class)
-    private List<Product> products;
+    @OneToMany(targetEntity = Product.class, mappedBy = "category")
+    List<Product> products;
 
 }
+
+

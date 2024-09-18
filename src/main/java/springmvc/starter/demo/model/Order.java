@@ -27,4 +27,7 @@ public class Order {
 
     @OneToMany(mappedBy = "order", targetEntity = OrderItem.class)
     private List<OrderItem> orderItems;
+
+    @ManyToMany(targetEntity = Product.class, fetch = FetchType.LAZY)
+    private List<Product> products;
 }
