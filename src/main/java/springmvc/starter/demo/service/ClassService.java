@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import springmvc.starter.demo.converter.ClassConverter;
 import springmvc.starter.demo.dto.ClassDTO;
 import springmvc.starter.demo.exception.ConflictException;
-import springmvc.starter.demo.model.Class;
+import springmvc.starter.demo.model.ClassEntity;
 import springmvc.starter.demo.repository.ClassRepository;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Service layer for handling business logic related to Class entities.
  */
 @Service
-public class ClassService implements CRUD<Class, Long, ClassDTO> {
+public class ClassService implements CRUD<ClassEntity, Long, ClassDTO> {
 
     @Autowired
     private ClassRepository classRepository;
@@ -58,11 +58,11 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
      *
      * @param classDTO The ClassDTO containing the data to save.
      */
-    public Class save(ClassDTO classDTO) {
+    public ClassEntity save(ClassDTO classDTO) {
         if (checkExitsByName(classDTO.getName())) {
             throw new ConflictException("Class name already exists");
         }
-        Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
+        ClassEntity classEntity = new ClassEntity(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
 
         return classRepository.save(classEntity);
     }
@@ -72,14 +72,14 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
      *
      * @param classDTO The ClassDTO containing the updated data.
      */
-    public Class update(ClassDTO classDTO) {
-        Class classFindByID = classRepository.findById(classDTO.getId()).orElseThrow();
+    public ClassEntity update(ClassDTO classDTO) {
+        ClassEntity classEntityFindByID = classRepository.findById(classDTO.getId()).orElseThrow();
 
-        if (!classFindByID.getName().equals(classDTO.getName()) && checkExitsByName(classDTO.getName())) {
+        if (!classEntityFindByID.getName().equals(classDTO.getName()) && checkExitsByName(classDTO.getName())) {
             throw new ConflictException("Class name already exists");
         }
 
-        Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
+        ClassEntity classEntity = new ClassEntity(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
 
         return classRepository.save(classEntity);
     }

@@ -12,6 +12,6 @@ import java.util.List;
 public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
     List<Student> findAllByNameContaining(String name);
 
-    @Query(value = "SELECT s.* FROM student s INNER JOIN class c ON s.class_id = c.id WHERE c.id = :id", nativeQuery = true)
+    @Query(value = "SELECT s.* FROM student s INNER JOIN class c ON s.classid = c.id WHERE c.id = :id", nativeQuery = true)
     List<Student> findAllByClassId(Long id);
 }
