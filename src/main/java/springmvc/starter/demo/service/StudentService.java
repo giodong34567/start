@@ -7,9 +7,12 @@ import springmvc.starter.demo.dto.ClassDTO;
 import springmvc.starter.demo.dto.StudentDTO;
 import springmvc.starter.demo.exception.NotFoundException;
 import springmvc.starter.demo.model.Class;
+import springmvc.starter.demo.model.Mark;
 import springmvc.starter.demo.model.Student;
+import springmvc.starter.demo.model.Subject;
 import springmvc.starter.demo.repository.StudentRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,6 +39,17 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
         return studentRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+    }
+
+    // Find by name
+    public List<StudentDTO> findAllByName(String name){
+        return studentRepository.findAllByNameContaining(name).stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    //Find by class ID
+
+    public List<StudentDTO> findAllByClassID(Long id){
+        return studentRepository.findAllByClassId(id).stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     /**
@@ -78,7 +92,8 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
         // Use studentDTO.getStudentClass().getId() to retrieve the class ID
         ClassDTO studentClass = classService.findById(studentDTO.getStudentClass().getId()).orElse(null);
         Class classEntity = new Class();
-
+        List<Subject> subjectEntities = new ArrayList<>();
+        List<Mark> marks = new ArrayList<>();
         if (studentClass != null) {
             BeanUtils.copyProperties(studentClass, classEntity);
         } else {
@@ -90,7 +105,8 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
                 studentDTO.getName(),
                 studentDTO.getEmail(),
                 studentDTO.getAge(),
-                classEntity
+                classEntity,
+                marks
         );
 
         try {

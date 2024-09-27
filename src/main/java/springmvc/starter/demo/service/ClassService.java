@@ -2,6 +2,7 @@ package springmvc.starter.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springmvc.starter.demo.converter.ClassConverter;
 import springmvc.starter.demo.dto.ClassDTO;
 import springmvc.starter.demo.exception.ConflictException;
 import springmvc.starter.demo.model.Class;
@@ -20,24 +21,24 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
     @Autowired
     private ClassRepository classRepository;
 
+    @Autowired
+    private ClassConverter classConverter;
     /**
      * Converts a Class entity to a ClassDTO.
      *
      * @param classEntity The Class entity to convert.
      * @return The corresponding ClassDTO.
      */
-    private ClassDTO convertToDto(Class classEntity) {
-        return new ClassDTO(classEntity.getId(), classEntity.getName(), classEntity.getDescription());
-    }
 
     /**
      * Retrieves all classes from the repository and maps them to DTOs.
      *
      * @return A list of ClassDTO objects.
      */
+
     public List<ClassDTO> findAll() {
         return classRepository.findAll().stream()
-                .map(this::convertToDto)
+                .map(classEntity -> classConverter.convertToDto(classEntity))
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +50,7 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
      */
     public Optional<ClassDTO> findById(Long id) {
         return classRepository.findById(id)
-                .map(this::convertToDto);
+                .map(classEntity -> classConverter.convertToDto(classEntity));
     }
 
     /**
@@ -62,7 +63,6 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
             throw new ConflictException("Class name already exists");
         }
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
-
 
         return classRepository.save(classEntity);
     }
@@ -80,7 +80,6 @@ public class ClassService implements CRUD<Class, Long, ClassDTO> {
         }
 
         Class classEntity = new Class(classDTO.getId(), classDTO.getName(), classDTO.getDescription(), null);
-
 
         return classRepository.save(classEntity);
     }

@@ -20,7 +20,6 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/classes")
 public class ClassController {
-
     @Autowired
     private ClassService classService;
 

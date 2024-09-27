@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import springmvc.starter.demo.model.Class;
+
 @Repository
 public interface ClassRepository extends JpaRepository<Class, Long>, JpaSpecificationExecutor<Class> {
 

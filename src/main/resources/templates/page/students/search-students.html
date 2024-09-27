@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Tìm kiếm học sinh theo tên: </h1>
+    <form method="get" th:action="@{/students/finds}">
+        <div class="form-group" style="padding-bottom: 50px">
+            <label for="name">Nhập tên: </label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Enter student name"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </form>
+    <h1>Danh sách sinh viên</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Gmail</th>
+            <th>Tuổi</th>
+            <th>Lớp</th>
+        </tr>
+        </thead>
+        <tbody>
+<!--        public class StudentDTO {-->
+<!--        private Long id;-->
+<!--        private String name;-->
+<!--        private String email;-->
+<!--        private int age;-->
+<!--        private ClassDTO studentClass;-->
+<!--        }-->
+        <tr th:each="student : ${studentNames}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.name}"></td>
+            <td th:text="${student.email}"></td>
+            <td th:text="${student.age}"></td>
+            <td th:text="${student.studentClass.getName()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/students}" class="btn btn-secondary mt-3">Back to Students List</a>
+</div>
+</body>
+</html>

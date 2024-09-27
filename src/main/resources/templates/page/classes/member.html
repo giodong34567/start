@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<div layout:fragment="content">
+    <h2 class="mb-4" th:text="${title}">Danh sách sinh viên trong lớp</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Age</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student : ${students}">
+            <td th:text="${student.id}">1</td>
+            <td th:text="${student.name}">John Doe</td>
+            <td th:text="${student.email}">john.doe@example.com</td>
+            <td th:text="${student.age}">20</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

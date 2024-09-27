@@ -24,13 +24,12 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")  // Custom login page URL
-                        .permitAll()           // Allow everyone to see the login page
+                        .permitAll()       // Allow everyone to see the login page
                 )
                 .logout(LogoutConfigurer::permitAll);  // Allow everyone to logout
 
         return http.build();  // Build the SecurityFilterChain
     }
-
 
     @Bean
     public UserDetailsService userDetailsService() {

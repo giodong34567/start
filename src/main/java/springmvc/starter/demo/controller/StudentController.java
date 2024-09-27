@@ -40,6 +40,23 @@ public class StudentController {
         return "page/students/list";
     }
 
+    // find by name
+
+    @GetMapping("/finds")
+    public String listALlNameStudents(@RequestParam(name = "name", required = false) String name, Model model){
+        model.addAttribute("studentNames", studentService.findAllByName(name));
+        return "page/students/search-students";
+    }
+
+    // find by class id
+    @GetMapping("/groups/{id}")
+    public String findAllByClassId(@PathVariable(name = "id") Long classId, Model model){
+        model.addAttribute("title", "Lớp học");
+        model.addAttribute("classId", classId);
+        model.addAttribute("students", studentService.findAllByClassID(classId));
+        return "page/classes/member";
+    }
+
     /**
      * Shows the form for creating a new student.
      * @param model Model for view rendering.
