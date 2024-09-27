@@ -7,9 +7,7 @@ import springmvc.starter.demo.dto.ClassDTO;
 import springmvc.starter.demo.dto.StudentDTO;
 import springmvc.starter.demo.exception.NotFoundException;
 import springmvc.starter.demo.model.Class;
-import springmvc.starter.demo.model.Mark;
 import springmvc.starter.demo.model.Student;
-import springmvc.starter.demo.model.Subject;
 import springmvc.starter.demo.repository.StudentRepository;
 
 import java.util.ArrayList;
@@ -92,8 +90,7 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
         // Use studentDTO.getStudentClass().getId() to retrieve the class ID
         ClassDTO studentClass = classService.findById(studentDTO.getStudentClass().getId()).orElse(null);
         Class classEntity = new Class();
-        List<Subject> subjectEntities = new ArrayList<>();
-        List<Mark> marks = new ArrayList<>();
+
         if (studentClass != null) {
             BeanUtils.copyProperties(studentClass, classEntity);
         } else {
@@ -105,8 +102,7 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
                 studentDTO.getName(),
                 studentDTO.getEmail(),
                 studentDTO.getAge(),
-                classEntity,
-                marks
+                classEntity
         );
 
         try {

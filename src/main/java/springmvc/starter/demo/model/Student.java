@@ -32,7 +32,7 @@ public class Student {
     @JoinColumn(name = "class_id")
     private Class studentClass;
 
-    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
-    private List<Mark> marks = new ArrayList<>();
+//    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+//    private List<Mark> marks = new ArrayList<>();
 }
 
