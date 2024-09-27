@@ -4,13 +4,19 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springmvc.starter.demo.dto.ClassDTO;
+import springmvc.starter.demo.dto.MarkDetailsDTO;
 import springmvc.starter.demo.dto.StudentDTO;
+import springmvc.starter.demo.dto.StudentDetailsDTO;
 import springmvc.starter.demo.exception.NotFoundException;
-import springmvc.starter.demo.model.Class;
+import springmvc.starter.demo.exception.ResourceNotFoundException;
+import springmvc.starter.demo.model.ClassEntity;
+import springmvc.starter.demo.model.Mark;
 import springmvc.starter.demo.model.Student;
+import springmvc.starter.demo.model.Subject;
+import springmvc.starter.demo.repository.MarkRepository;
 import springmvc.starter.demo.repository.StudentRepository;
+import springmvc.starter.demo.repository.SubjectRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,6 +33,12 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
 
     @Autowired
     private ClassService classService;
+
+    @Autowired
+    private MarkRepository markRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     /**
      * Retrieves all students from the repository and maps them to DTOs.
@@ -63,9 +75,9 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
                 student.getEmail(),
                 student.getAge(),
                 new ClassDTO(
-                        student.getStudentClass().getId(),
-                        student.getStudentClass().getName(),
-                        student.getStudentClass().getDescription()
+                        student.getClassEntity().getId(),
+                        student.getClassEntity().getName(),
+                        student.getClassEntity().getDescription()
                 )
         );
     }
@@ -89,7 +101,7 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
     public Student save(StudentDTO studentDTO) {
         // Use studentDTO.getStudentClass().getId() to retrieve the class ID
         ClassDTO studentClass = classService.findById(studentDTO.getStudentClass().getId()).orElse(null);
-        Class classEntity = new Class();
+        ClassEntity classEntity = new ClassEntity();
 
         if (studentClass != null) {
             BeanUtils.copyProperties(studentClass, classEntity);
@@ -102,7 +114,8 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
                 studentDTO.getName(),
                 studentDTO.getEmail(),
                 studentDTO.getAge(),
-                classEntity
+                classEntity,
+                null
         );
 
         try {
@@ -119,9 +132,9 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
      */
     public Student update(StudentDTO studentDTO) {
         Student student = studentRepository.findById(studentDTO.getId()).orElse(null);
-        Class classEntity = new Class();
+        ClassEntity classEntity = new ClassEntity();
         if (student != null) {
-            if (!Objects.equals(student.getStudentClass().getId(), studentDTO.getStudentClass().getId())) {
+            if (!Objects.equals(student.getClassEntity().getId(), studentDTO.getStudentClass().getId())) {
                 ClassDTO studentClass = classService.findById(studentDTO.getStudentClass().getId()).orElse(null);
                 if (studentClass != null) {
                     BeanUtils.copyProperties(studentClass, classEntity);
@@ -129,12 +142,12 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
                     throw new NotFoundException("Class not found");
                 }
             } else {
-                classEntity = student.getStudentClass();
+                classEntity = student.getClassEntity();
             }
             student.setName(studentDTO.getName());
             student.setEmail(studentDTO.getEmail());
             student.setAge(studentDTO.getAge());
-            student.setStudentClass(classEntity);
+            student.setClassEntity(classEntity);
             return studentRepository.save(student);
         } else {
             throw new NotFoundException("Student not found");
@@ -149,4 +162,35 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
     public void deleteById(Long id) {
         studentRepository.deleteById(id);
     }
+    public StudentDetailsDTO getStudentDetails(Long studentId) {
+        // Lấy thông tin học sinh
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        // Lấy danh sách điểm của học sinh
+        List<Mark> marks = markRepository.findByStudentId(studentId);
+
+        // Tạo DTO và kết hợp thông tin
+        StudentDetailsDTO studentDetailsDTO = new StudentDetailsDTO();
+        studentDetailsDTO.setStudentName(student.getName());
+        studentDetailsDTO.setEmail(student.getEmail());
+        studentDetailsDTO.setAge(student.getAge());
+
+        // Lấy thông tin môn học từ Mark
+        List<MarkDetailsDTO> markDetails = marks.stream().map(mark -> {
+            Subject subject = mark.getSubject(); // Lấy môn học từ điểm
+
+            String subjectName = (subject != null) ? subject.getName() : "Unknown Subject";
+
+            return new MarkDetailsDTO(
+                    mark.getMark(),
+                    mark.getMarkType(),
+                    subjectName
+            );
+        }).collect(Collectors.toList());
+
+        studentDetailsDTO.setMarkDetails(markDetails);
+        return studentDetailsDTO;
+    }
+
 }

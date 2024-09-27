@@ -26,9 +26,10 @@
             <td th:text="${student.age}">20</td>
             <td th:text="${student.studentClass != null ? student.studentClass.name : 'No Class Assigned'}">Class Name</td> <!-- Display Class name -->
             <td>
-                <a class="btn btn-warning btn-sm" th:href="@{/students/edit/{id}(id=${student.id})}">Edit</a>
+                <a class="btn btn-warning btn-sm" th:href="@{/students/edit/{id}(id=${student.id})}">Chỉnh sửa</a>
                 <a class="btn btn-danger btn-sm" th:href="@{/students/delete/{id}(id=${student.id})}"
-                   onclick="return confirm('Are you sure you want to delete this student?');">Delete</a>
+                   onclick="return confirm('Are you sure you want to delete this student?');">Xóa</a>
+                <a class="btn btn-primary btn-sm" th:href="@{/students/details/{id}(id=${student.id})}">Kết quả</a>
             </td>
         </tr>
         </tbody>

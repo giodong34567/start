@@ -11,7 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Class {
+@Table(name = "class")
+public class ClassEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,6 @@ public class Class {
     @Column(nullable = false, name = "description", columnDefinition = "TINYTEXT")
     private String description;
 
-    @OneToMany(mappedBy = "studentClass", targetEntity = Student.class)
+    @OneToMany(mappedBy = "classEntity", targetEntity = Student.class)
     private List<Student> students;
 }

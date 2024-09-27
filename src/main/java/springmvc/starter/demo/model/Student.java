@@ -4,15 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "student")
 public class Student {
 
     @Id
@@ -29,10 +28,10 @@ public class Student {
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "class_id")
-    private Class studentClass;
+    @JoinColumn(name = "classid")
+    private ClassEntity classEntity;
 
-//    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
-//    private List<Mark> marks = new ArrayList<>();
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
+    private List<Mark> marks = new ArrayList<>();
 }
 

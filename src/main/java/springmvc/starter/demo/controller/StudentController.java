@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import springmvc.starter.demo.dto.ClassDTO;
 import springmvc.starter.demo.dto.StudentDTO;
+import springmvc.starter.demo.dto.StudentDetailsDTO;
 import springmvc.starter.demo.service.ClassService;
 import springmvc.starter.demo.service.StudentService;
 import springmvc.starter.demo.vo.StudentVO;
@@ -144,5 +145,17 @@ public class StudentController {
     public String deleteStudent(@PathVariable("id") Long id) {
         studentService.deleteById(id);
         return "redirect:/students";
+    }
+
+    @GetMapping("/performances/{id}")
+    public String getPerformanceStudy(@PathVariable("id") Long id, Model model){
+        return null;
+    }
+    @GetMapping("/details/{id}")
+    public String getStudentDetails(@PathVariable(name = "id") Long id, Model model) {
+        StudentDetailsDTO studentDetailsDTO = studentService.getStudentDetails(id);
+        model.addAttribute("details", studentDetailsDTO);
+        model.addAttribute("title", "Bảng điểm");
+        return "page/students/details";
     }
 }
