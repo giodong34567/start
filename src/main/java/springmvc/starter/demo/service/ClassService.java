@@ -2,11 +2,15 @@ package springmvc.starter.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import springmvc.starter.demo.converter.ClassConverter;
 import springmvc.starter.demo.dto.ClassDTO;
 import springmvc.starter.demo.exception.ConflictException;
 import springmvc.starter.demo.model.ClassEntity;
+import springmvc.starter.demo.model.Student;
 import springmvc.starter.demo.repository.ClassRepository;
+import springmvc.starter.demo.repository.MarkRepository;
+import springmvc.starter.demo.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +27,12 @@ public class ClassService implements CRUD<ClassEntity, Long, ClassDTO> {
 
     @Autowired
     private ClassConverter classConverter;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private MarkRepository markRepository;
     /**
      * Converts a Class entity to a ClassDTO.
      *
@@ -89,6 +99,7 @@ public class ClassService implements CRUD<ClassEntity, Long, ClassDTO> {
      *
      * @param id The ID of the class to delete.
      */
+
     public void deleteById(Long id) {
         classRepository.deleteById(id);
     }
@@ -99,6 +110,6 @@ public class ClassService implements CRUD<ClassEntity, Long, ClassDTO> {
      * @param name The name to check.
      */
     boolean checkExitsByName(String name) {
-        return this.classRepository.existsByName(name);
+        return classRepository.existsByName(name);
     }
 }

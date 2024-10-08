@@ -13,6 +13,7 @@ import springmvc.starter.demo.service.ClassService;
 import springmvc.starter.demo.service.StudentService;
 import springmvc.starter.demo.vo.StudentVO;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,6 +35,12 @@ public class StudentController {
      * @param model Model for view rendering.
      * @return The student list view.
      */
+
+//    @GetMapping
+//    public List<StudentDTO> listStudents() {
+//        return studentService.findAll();
+//    }
+
     @GetMapping
     public String listStudents(Model model) {
         model.addAttribute("students", studentService.findAll());
@@ -148,10 +155,6 @@ public class StudentController {
     }
 
     @GetMapping("/performances/{id}")
-    public String getPerformanceStudy(@PathVariable("id") Long id, Model model){
-        return null;
-    }
-    @GetMapping("/details/{id}")
     public String getStudentDetails(@PathVariable(name = "id") Long id, Model model) {
         StudentDetailsDTO studentDetailsDTO = studentService.getStudentDetails(id);
         model.addAttribute("details", studentDetailsDTO);

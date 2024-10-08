@@ -13,3 +13,8 @@ public interface ClassRepository extends JpaRepository<ClassEntity, Long>, JpaSp
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM ClassEntity c WHERE c.name = ?1")
     boolean existsByName(String name);
 }
+
+/*
+* @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM ClassEntity c WHERE c.name = ?1")
+    boolean existsByName(String name);
+* */

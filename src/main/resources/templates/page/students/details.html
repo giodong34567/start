@@ -4,18 +4,22 @@
 <body>
 
 <div layout:fragment="content">
-    <h2 class="mb-4" th:text="${title}">Students</h2>
+    <h2 class="mb-4" th:text="${details.studentName}">Students</h2>
     <table class="table table-striped">
         <thead>
         <tr>
             <th scope="col">Tên môn học</th>
             <th scope="col">Điểm số</th>
+            <th scope="col">Cập nhập</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="detail : ${details.markDetails}">
             <td th:text="${detail.subjectName}">Tên môn học</td>
             <td th:text="${detail.mark}">Điểm số</td>
+            <td>
+                <a class="btn btn-primary btn-sm">Cập nhật</a>
+            </td>
         </tr>
         </tbody>
     </table>

@@ -3,6 +3,7 @@ package springmvc.starter.demo.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import springmvc.starter.demo.dto.ClassDTO;
 import springmvc.starter.demo.dto.MarkDetailsDTO;
 import springmvc.starter.demo.dto.StudentDTO;
@@ -159,26 +160,27 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
      *
      * @param id The ID of the student to delete.
      */
+
+    @Transactional
     public void deleteById(Long id) {
+        Student student = studentRepository.findById(id).get();
+        markRepository.deleteAllByStudent(student);
         studentRepository.deleteById(id);
     }
     public StudentDetailsDTO getStudentDetails(Long studentId) {
-        // Lấy thông tin học sinh
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
 
-        // Lấy danh sách điểm của học sinh
-        List<Mark> marks = markRepository.findByStudentId(studentId);
 
-        // Tạo DTO và kết hợp thông tin
+        List<Mark> marks = markRepository.findAllByStudentId(studentId);
+
         StudentDetailsDTO studentDetailsDTO = new StudentDetailsDTO();
         studentDetailsDTO.setStudentName(student.getName());
         studentDetailsDTO.setEmail(student.getEmail());
         studentDetailsDTO.setAge(student.getAge());
 
-        // Lấy thông tin môn học từ Mark
         List<MarkDetailsDTO> markDetails = marks.stream().map(mark -> {
-            Subject subject = mark.getSubject(); // Lấy môn học từ điểm
+            Subject subject = mark.getSubject();
 
             String subjectName = (subject != null) ? subject.getName() : "Unknown Subject";
 
@@ -192,5 +194,4 @@ public class StudentService implements CRUD<Student, Long, StudentDTO> {
         studentDetailsDTO.setMarkDetails(markDetails);
         return studentDetailsDTO;
     }
-
 }
