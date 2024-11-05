@@ -1,29 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
 <body>
-
 <div layout:fragment="content">
-    <h2 class="mb-4" th:text="${details.studentName}">Students</h2>
-    <table class="table table-striped">
+    <h1>Tìm kiếm học sinh theo tên: </h1>
+    <form method="get" th:action="@{/students/details}">
+        <div class="form-group" style="padding-bottom: 50px">
+            <label for="id">Nhập Chứng minh nhân dân: </label>
+            <input type="text" name="id" id="id" class="form-control" placeholder="Nhập chứng minh nhân dân"/>
+        </div>
+        <div class="form-group" style="padding-bottom: 50px">
+            <label for="fullname">Nhập tên: </label>
+            <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Nhập tên sinh viên"/>
+        </div>
+        <div class="form-group" style="padding-bottom: 50px">
+            <label for="majorId">Nhập mã ngành: </label>
+            <input type="text" name="majorId" id="majorId" class="form-control" placeholder="Nhập mã ngành"/>
+        </div><div class="form-group" style="padding-bottom: 50px">
+            <label for="schoolId">Nhập mã trường: </label>
+            <input type="text" name="schoolId" id="schoolId" class="form-control" placeholder="Nhập mã trường"/>
+        </div>
+        <div class="form-group" style="padding-bottom: 50px">
+            <label for="companyName">Nhập tên công ty: </label>
+            <input type="text" name="companyName" id="companyName" class="form-control" placeholder="Nhập tên công ty"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </form>
+    <h1>Danh sách sinh viên</h1>
+
+    <table class="table">
         <thead>
         <tr>
-            <th scope="col">Tên môn học</th>
-            <th scope="col">Điểm số</th>
-            <th scope="col">Cập nhập</th>
+            <th>Số chứng minh nhân dân</th>
+            <th>Họ và Tên</th>
+            <th>Mã ngành</th>
+            <th>Mã trường</th>
+            <th>Tên công ty</th>
+            <th>Thời gian làm việc</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="detail : ${details.markDetails}">
-            <td th:text="${detail.subjectName}">Tên môn học</td>
-            <td th:text="${detail.mark}">Điểm số</td>
-            <td>
-                <a class="btn btn-primary btn-sm">Cập nhật</a>
-            </td>
+        <tr th:each="student : ${students}">
+            <td th:text="${student.id}"></td>
+            <td th:text="${student.fullname}"></td>
+            <td th:text="${student.majorId}"></td>
+            <td th:text="${student.schoolId}"></td>
+            <td th:text="${student.companyName}"></td>
+            <td th:text="${student.jobTime}"></td>
         </tr>
         </tbody>
     </table>
-</div>
 
+    <a th:href="@{/students}" class="btn btn-secondary mt-3">Back to Students List</a>
+</div>
 </body>
 </html>

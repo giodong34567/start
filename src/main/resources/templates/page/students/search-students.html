@@ -8,7 +8,7 @@
 <body>
 <div layout:fragment="content">
     <h1>Tìm kiếm học sinh theo tên: </h1>
-    <form method="get" th:action="@{/students/finds}">
+    <form method="get" th:action="@{/students/searchings}">
         <div class="form-group" style="padding-bottom: 50px">
             <label for="name">Nhập tên: </label>
             <input type="text" name="name" id="name" class="form-control" placeholder="Enter student name"/>
@@ -21,27 +21,20 @@
     <table class="table">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Tên</th>
+            <th>Số chứng minh nhân dân</th>
+            <th>Họ và Tên</th>
             <th>Gmail</th>
-            <th>Tuổi</th>
-            <th>Lớp</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
         </tr>
         </thead>
         <tbody>
-<!--        public class StudentDTO {-->
-<!--        private Long id;-->
-<!--        private String name;-->
-<!--        private String email;-->
-<!--        private int age;-->
-<!--        private ClassDTO studentClass;-->
-<!--        }-->
-        <tr th:each="student : ${studentNames}">
+        <tr th:each="student : ${students}">
             <td th:text="${student.id}"></td>
-            <td th:text="${student.name}"></td>
+            <td th:text="${student.fullname}"></td>
             <td th:text="${student.email}"></td>
-            <td th:text="${student.age}"></td>
-            <td th:text="${student.studentClass.getName()}"></td>
+            <td th:text="${student.phoneNumber}"></td>
+            <td th:text="${student.address}"></td>
         </tr>
         </tbody>
     </table>

@@ -2,24 +2,22 @@ package springmvc.starter.demo.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import springmvc.starter.demo.dto.ClassDTO;
-import springmvc.starter.demo.dto.StudentDTO;
-import springmvc.starter.demo.dto.StudentDetailsDTO;
-import springmvc.starter.demo.service.ClassService;
+import springmvc.starter.demo.dto.request.StudentDTO;
+import springmvc.starter.demo.dto.response.StudentResponseDTO;
+import springmvc.starter.demo.service.GraduationService;
+import springmvc.starter.demo.service.MajorService;
+import springmvc.starter.demo.service.SchoolService;
 import springmvc.starter.demo.service.StudentService;
-import springmvc.starter.demo.vo.StudentVO;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-/**
- * Controller for managing student-related operations.
- * This controller handles listing, creating, editing, updating, and deleting students.
- */
 @Controller
 @RequestMapping("/students")
 public class StudentController {
@@ -28,137 +26,52 @@ public class StudentController {
     private StudentService studentService;
 
     @Autowired
-    private ClassService classService;
+    private MajorService majorService;
 
-    /**
-     * Lists all students.
-     * @param model Model for view rendering.
-     * @return The student list view.
-     */
+    @Autowired
+    private SchoolService schoolService;
 
-//    @GetMapping
-//    public List<StudentDTO> listStudents() {
-//        return studentService.findAll();
-//    }
+    @Autowired
+    private GraduationService graduationService;
 
     @GetMapping
     public String listStudents(Model model) {
         model.addAttribute("students", studentService.findAll());
-        model.addAttribute("title", "Students");
+        model.addAttribute("title", "List of students");
+
         return "page/students/list";
     }
 
-    // find by name
-
-    @GetMapping("/finds")
-    public String listALlNameStudents(@RequestParam(name = "name", required = false) String name, Model model){
-        model.addAttribute("studentNames", studentService.findAllByName(name));
-        return "page/students/search-students";
-    }
-
-    // find by class id
-    @GetMapping("/groups/{id}")
-    public String findAllByClassId(@PathVariable(name = "id") Long classId, Model model){
-        model.addAttribute("title", "Lớp học");
-        model.addAttribute("classId", classId);
-        model.addAttribute("students", studentService.findAllByClassID(classId));
-        return "page/classes/member";
-    }
-
-    /**
-     * Shows the form for creating a new student.
-     * @param model Model for view rendering.
-     * @return The create student form view.
-     */
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("studentVO", new StudentVO());
-        model.addAttribute("classes", classService.findAll()); 
+    public String showCreateForm(Model model){
+        model.addAttribute("studentDTO", new StudentDTO());
+        model.addAttribute("majors", majorService.findAll());
+        model.addAttribute("schools", schoolService.findAll());
         return "page/students/create-form";
     }
 
-    /**
-     * Saves a new student.
-     * @param studentVO The student data from the form.
-     * @param bindingResult Binding result for validation.
-     * @param model Model for view rendering.
-     * @return Redirects to the student list view on success, or back to the create form on validation failure.
-     */
     @PostMapping
-    public String saveStudent(@Valid @ModelAttribute("studentVO") StudentVO studentVO, BindingResult bindingResult, Model model) {
-        Optional<ClassDTO> classDTO = classService.findById(studentVO.getClassId());
-        if (classDTO.isEmpty()) {
-            bindingResult.rejectValue("classId", "error.classId", "Lớp không tồn tại");
-        }
+    public String saveStudent(@Valid @ModelAttribute("studentDTO") StudentDTO studentDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("classes", classService.findAll());
+            model.addAttribute("studentDTO", studentDTO);
+            model.addAttribute("majors", majorService.findAll());
+            model.addAttribute("schools", schoolService.findAll());
             return "page/students/create-form";
         }
-        StudentDTO studentDTO = new StudentDTO(null, studentVO.getName(), studentVO.getEmail(), studentVO.getAge(), new ClassDTO(studentVO.getClassId(), null, null));
-        studentService.save(studentDTO);
+        studentService.saveStudent(studentDTO);
         return "redirect:/students";
     }
 
-    /**
-     * Shows the form for editing an existing student.
-     * @param id The ID of the student to edit.
-     * @param model Model for view rendering.
-     * @return The edit student form view if the student exists, or redirects to the student list view if not.
-     */
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Optional<StudentDTO> studentDTO = studentService.findById(id);
-        if (studentDTO.isPresent()) {
-            model.addAttribute("studentVO", new StudentVO(studentDTO.get().getName(), studentDTO.get().getEmail(), studentDTO.get().getAge(), studentDTO.get().getStudentClass().getId()));
-            model.addAttribute("studentId", id);
-            model.addAttribute("classes", classService.findAll()); 
-            return "page/students/update-form";
-        } else {
-            return "redirect:/students";
-        }
+    @GetMapping("/searchings")
+    public String showSearchingForm(Model model, @RequestParam(name = "name", required = false) String name) {
+        model.addAttribute("students", studentService.findStudentByName(name));
+        return "page/students/search-students";
     }
 
-    /**
-     * Updates an existing student.
-     * @param id The ID of the student to update.
-     * @param studentVO The updated student data from the form.
-     * @param bindingResult Binding result for validation.
-     * @param model Model for view rendering.
-     * @return Redirects to the student list view on success, or back to the update form on validation failure.
-     */
-    @PostMapping("/update/{id}")
-    public String updateStudent(@PathVariable("id") Long id, @Valid @ModelAttribute("studentVO") StudentVO studentVO, BindingResult bindingResult, Model model) {
-
-        Optional<ClassDTO> classDTO = classService.findById(studentVO.getClassId());
-        if (classDTO.isEmpty()) {
-            bindingResult.rejectValue("classId", "error.classId", "Lớp không tồn tại");
-        }
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("studentId", id); // Ensure the ID is passed back to the form
-            model.addAttribute("classes", classService.findAll()); // Pass classes back to the form
-            return "page/students/update-form";  // Return to the update form view
-        }
-        StudentDTO studentDTO = new StudentDTO(id, studentVO.getName(), studentVO.getEmail(), studentVO.getAge(), new ClassDTO(studentVO.getClassId(), null, null));
-        studentService.update(studentDTO);
-        return "redirect:/students";
-    }
-
-    /**
-     * Deletes a student.
-     * @param id The ID of the student to delete.
-     * @return Redirects to the student list view.
-     */
-    @GetMapping("/delete/{id}")
-    public String deleteStudent(@PathVariable("id") Long id) {
-        studentService.deleteById(id);
-        return "redirect:/students";
-    }
-
-    @GetMapping("/performances/{id}")
-    public String getStudentDetails(@PathVariable(name = "id") Long id, Model model) {
-        StudentDetailsDTO studentDetailsDTO = studentService.getStudentDetails(id);
-        model.addAttribute("details", studentDetailsDTO);
-        model.addAttribute("title", "Bảng điểm");
+    @GetMapping("/details")
+    public String showStudentDetails(Model model, @RequestParam Map<String, String> params) {
+        List<StudentResponseDTO> studentResponseDTOs = studentService.findAllDetails(params);
+        model.addAttribute("students", studentResponseDTOs);
         return "page/students/details";
     }
 }

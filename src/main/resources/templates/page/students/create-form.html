@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
->
 <body>
 
 <div layout:fragment="content">
     <h1>Create Student</h1>
-    <form th:action="@{/students}" th:object="${studentVO}" method="post">
+    <form th:action="@{/students}" th:object="${studentDTO}" method="post">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Enter student name"/>
-            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+            <input type="text" id="name" th:field="*{fullname}" class="form-control" placeholder="Enter student name"/>
+            <div th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="text-danger"></div>
         </div>
 
         <div class="form-group">
@@ -20,22 +19,47 @@
         </div>
 
         <div class="form-group">
-            <label for="age">Age:</label>
-            <input type="number" id="age" th:field="*{age}" class="form-control" placeholder="Enter student age"/>
-            <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></div>
+            <label for="address">Address</label>
+            <input type="text" id="address" th:field="*{address}" class="form-control" placeholder="Enter student address"/>
+            <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-danger"></div>
         </div>
 
         <div class="form-group">
-            <label for="classId">Class:</label>
-            <select id="classId" th:field="*{classId}" class="form-control">
-                <option th:each="class : ${classes}" th:value="${class.id}" th:text="${class.name}"></option>
-            </select>
-            <div th:if="${#fields.hasErrors('classId')}" th:errors="*{classId}" class="text-danger"></div>
+            <label for="phoneNumber">Phone number</label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control" placeholder="Enter phone number"/>
+            <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-danger"></div>
         </div>
+
+        <div class="form-group">
+            <label for="majorId">Major</label>
+            <select id="majorId" th:field="*{majorId}" class="form-control">
+                <option value="">---Chọn ngành---</option>
+                <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}">--Chọn ngành--</option>
+            </select>
+            <div th:if="${#fields.hasErrors('majorId')}" th:errors="*{majorId}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="schoolId">School</label>
+            <select id="schoolId" th:field="*{schoolId}" class="form-control">
+                <option value="">---Chọn trường---</option> <!-- Tùy chọn mặc định -->
+                <option th:each="school : ${schools}" th:value="${school.id}" th:text="${school.name}"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('schoolId')}" th:errors="*{schoolId}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="graduationDate">Chọn ngày tốt nghiệp</label>
+            <input type="date" id="graduationDate" th:field="*{graduationDate}" class="form-control" placeholder="Enter graduation date"/>
+            <div th:if="${#fields.hasErrors('graduationDate')}" th:errors="*{graduationDate}" class="text-danger"></div>
+        </div>
+
 
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 
     <a th:href="@{/students}" class="btn btn-secondary mt-3">Back to Students List</a>
 </div>
+
 </body>
+</html>
